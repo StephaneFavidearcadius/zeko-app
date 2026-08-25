@@ -1,0 +1,191 @@
+<?php
+// Fichier : admin-login.php
+// Page de connexion pour l'espace administrateur
+
+require_once __DIR__ . '/includes/config.php';
+
+// Si déjà connecté en tant qu'admin, rediriger vers le dashboard admin
+if (isLoggedIn() && isAdmin()) {
+    redirect(APP_URL . 'admin/dashboard.php');
+}
+
+// Si déjà connecté mais pas admin, rediriger vers le dashboard vendeur
+if (isLoggedIn() && !isAdmin()) {
+    redirect(APP_URL . 'seller/dashboard.php');
+}
+
+$pageTitle = 'Connexion Administrateur - Zeko.app';
+
+$email = '';
+$errors = [];
+
+// Traitement du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $email = sanitize($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['remember']);
+    
+    // Validation
+    if (empty($email)) {
+        $errors['email'] = 'L\'email est requis.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Veuillez entrer une adresse email valide.';
+    }
+    
+    if (empty($password)) {
+        $errors['password'] = 'Le mot de passe est requis.';
+    }
+    
+    // Si pas d'erreurs, vérifier les identifiants
+    if (empty($errors)) {
+        try {
+            $pdo = getPDO();
+            
+            // Récupérer l'utilisateur
+            $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, password, role, status FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+            
+            if ($user && password_verify($password, $user['password'])) {
+                
+                // Vérifier si le compte est actif
+                if ($user['status'] !== 'active') {
+                    setFlashMessage('error', 'Votre compte est désactivé. Contactez l\'administrateur.');
+                    redirect(APP_URL . 'admin-login.php');
+                }
+                
+                // Vérifier que c'est bien un administrateur
+                if ($user['role'] !== 'admin') {
+                    setFlashMessage('error', 'Accès non autorisé. Cette page est réservée aux administrateurs.');
+                    redirect(APP_URL . 'admin-login.php');
+                }
+                
+                // Créer la session
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_first_name'] = $user['first_name'];
+                $_SESSION['user_last_name'] = $user['last_name'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_role'] = $user['role'];
+                
+                // "Se souvenir de moi" - Cookie
+                if ($remember) {
+                    $token = bin2hex(random_bytes(32));
+                    setcookie('remember_token', $token, time() + 86400 * 30, '/');
+                    // TODO: Stocker le token en base de données
+                }
+                
+                setFlashMessage('success', 'Bienvenue ' . $user['first_name'] . ' ! Vous êtes connecté en tant qu\'administrateur.');
+                
+                // Rediriger vers le dashboard admin
+                redirect(APP_URL . 'admin/dashboard.php');
+                
+            } else {
+                $errors['general'] = 'Email ou mot de passe incorrect.';
+            }
+            
+        } catch (PDOException $e) {
+            $errors['general'] = 'Une erreur technique est survenue. Veuillez réessayer.';
+        }
+    }
+}
+?>
+
+<?php ob_start(); ?>
+
+<div class="auth-page">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <a href="<?php echo APP_URL; ?>" class="auth-logo">Zeko<span>.app</span></a>
+                    <div class="auth-badge-admin">
+                        <i class="fas fa-shield-alt"></i> Espace Administrateur
+                    </div>
+                    <h1>Connexion Admin</h1>
+                    <p>Connectez-vous à votre espace d'administration</p>
+                </div>
+                
+                <?php if (isset($errors['general'])): ?>
+                    <div class="auth-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <?php echo escape($errors['general']); ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form method="POST" action="" data-validate>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Adresse email</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                value="<?php echo escape($email); ?>"
+                                placeholder="admin@zeko.app"
+                                required
+                            >
+                        </div>
+                        <?php if (isset($errors['email'])): ?>
+                            <span class="field-error"><?php echo escape($errors['email']); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Mot de passe -->
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Votre mot de passe"
+                                required
+                            >
+                            <button type="button" class="toggle-password" data-target="password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <?php if (isset($errors['password'])): ?>
+                            <span class="field-error"><?php echo escape($errors['password']); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Options -->
+                    <div class="form-options">
+                        <div class="form-check">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Se souvenir de moi</label>
+                        </div>
+                        <a href="forgot-password.php" class="forgot-link">Mot de passe oublié ?</a>
+                    </div>
+                    
+                    <!-- Bouton -->
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </button>
+                    
+                    <!-- Lien vers connexion vendeur -->
+                    <div class="auth-footer">
+                        <span class="auth-separator">ou</span>
+                        <a href="<?php echo APP_URL; ?>login.php" class="auth-switch-link">
+                            <i class="fas fa-store"></i> Accéder à l'espace vendeur
+                        </a>
+                    </div>
+                    
+                   
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/includes/header.php';
+echo $content;
+include __DIR__ . '/includes/footer.php';
+?>
