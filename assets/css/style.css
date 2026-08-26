@@ -277,32 +277,37 @@ header {
     font-size: 0.875rem;
     font-weight: 600;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .hero-subtitle {
     font-size: 1.2rem;
     color: var(--gray-600);
-    max-width: 480px;
-    margin-bottom: 32px;
+    max-width: 600px;
+    margin: 0 auto 32px;
     line-height: 1.7;
+    text-align: center;
 }
 
 .hero-actions {
     display: flex;
     gap: 16px;
     margin-bottom: 48px;
+    justify-content: center;
 }
 
 .hero-stats {
     display: flex;
     gap: 48px;
+    justify-content: center;
 }
 
 .stat-item {
