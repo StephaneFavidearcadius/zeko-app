@@ -11,9 +11,9 @@ ob_start();
 ?>
 
 <!-- HERO SECTION -->
-<section class="hero">
-    <div class="container">
-        <div class="hero-content">
+<section class="hero" style="text-align: center; padding-bottom: 40px;">
+    <div class="container" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
+        <div class="hero-content" style="max-width: 700px; margin: 0 auto;">
             <span class="hero-badge">🚀 Plateforme SaaS</span>
             <h1 class="hero-title">
                 Vendez vos <span class="highlight">produits numériques</span> simplement
@@ -22,7 +22,7 @@ ob_start();
                 Créez votre boutique en ligne en quelques minutes. Gérez vos ventes, 
                 téléchargements et clients depuis un tableau de bord moderne.
             </p>
-            <div class="hero-actions">
+            <div class="hero-actions" style="justify-content: center;">
                 <a href="register.php" class="btn btn-primary btn-lg">
                     <i class="fas fa-rocket"></i> Commencer gratuitement
                 </a>
@@ -30,7 +30,7 @@ ob_start();
                     <i class="fas fa-play-circle"></i> Découvrir
                 </a>
             </div>
-            <div class="hero-stats">
+            <div class="hero-stats" style="justify-content: center;">
                 <div class="stat-item">
                     <span class="stat-number">10K+</span>
                     <span class="stat-label">Vendeurs actifs</span>
@@ -45,29 +45,16 @@ ob_start();
                 </div>
             </div>
         </div>
-        <div class="hero-image">
-            <div class="dashboard-preview">
-                <div class="preview-header">
-                    <div class="preview-dots">
-                        <span></span><span></span><span></span>
-                    </div>
-                    <span>Tableau de bord</span>
-                </div>
-                <div class="preview-content">
-                    <div class="preview-stat">
-                        <span class="stat-value">€12,450</span>
-                        <span class="stat-label">Chiffre d'affaires</span>
-                    </div>
-                    <div class="preview-stat">
-                        <span class="stat-value">342</span>
-                        <span class="stat-label">Ventes</span>
-                    </div>
-                    <div class="preview-stat">
-                        <span class="stat-value">28</span>
-                        <span class="stat-label">Produits</span>
-                    </div>
-                </div>
-            </div>
+    </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="dashboard-screenshot" style="text-align: center; padding: 0 20px 60px;">
+    <div class="container" style="max-width: 1100px;">
+        <div style="border-radius: 16px 16px 0 0; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid #e5e7eb; border-bottom: none;">
+            <img src="<?php echo APP_URL; ?>assets/images/dashboard-preview.png" 
+                 alt="Aperçu du tableau de bord Zeko.app" 
+                 style="width: 100%; display: block; height: auto;">
         </div>
     </div>
 </section>
