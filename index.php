@@ -115,7 +115,7 @@ ob_start();
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how-it-works">
+<section id="how-it-works" class="how-it-works">
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Comment ça marche</span>
@@ -151,7 +151,7 @@ ob_start();
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testimonials">
+<section id="testimonials" class="testimonials">
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Témoignages</span>
