@@ -58,7 +58,7 @@
 </footer>
 
 <!-- JavaScript Global -->
-<script src="<?php echo APP_URL; ?>assets/js/app.js"></script>
+<script src="<?php echo APP_URL; ?>assets/js/app.js?v=<?php echo time(); ?>"></script>
 
 <?php if (isset($additionalJS)): ?>
     <?php echo $additionalJS; ?>

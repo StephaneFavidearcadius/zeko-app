@@ -77,7 +77,6 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
             <li>
                 <a href="#" 
                    class="logout-link" 
-                   id="logoutButton"
                    data-confirm="Êtes-vous sûr de vouloir vous déconnecter ?"
                    data-confirm-title="Déconnexion"
                    data-confirm-icon="warning"
