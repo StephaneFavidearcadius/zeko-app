@@ -75,18 +75,18 @@ document.addEventListener('DOMContentLoaded', function() {
         modalConfirm.textContent = config.confirmText;
         modalConfirm.className = `btn ${config.confirmClass}`;
         
+        // Re-querier à chaque appel pour éviter les duplications
+        let detailEl = document.querySelector('.modal-detail');
         if (config.detail) {
-            if (!modalDetail) {
-                const detailEl = document.createElement('div');
+            if (!detailEl) {
+                detailEl = document.createElement('div');
                 detailEl.className = 'modal-detail';
-                detailEl.textContent = config.detail;
                 document.querySelector('.modal-body').appendChild(detailEl);
-            } else {
-                modalDetail.textContent = config.detail;
-                modalDetail.style.display = 'block';
             }
-        } else if (modalDetail) {
-            modalDetail.style.display = 'none';
+            detailEl.textContent = config.detail;
+            detailEl.style.display = 'block';
+        } else if (detailEl) {
+            detailEl.style.display = 'none';
         }
         
         pendingAction = config.onConfirm;
@@ -127,9 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================
     document.querySelectorAll('.delete-confirm').forEach(function(link) {
         link.addEventListener('click', function(e) {
-            // ⚠️ TRÈS IMPORTANT : Empêcher le comportement par défaut
             e.preventDefault();
-            // ⚠️ TRÈS IMPORTANT : Empêcher la propagation
             e.stopPropagation();
             
             const href = this.getAttribute('href');
@@ -164,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const detail = this.getAttribute('data-confirm-detail') || null;
             const href = this.getAttribute('href');
             const target = this.getAttribute('data-target') || null;
+            const redirect = this.getAttribute('data-redirect') || null;
             
             openModal({
                 title: title,
@@ -176,9 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
                              icon === 'warning' ? 'btn-warning' : 'btn-primary',
                 detail: detail,
                 onConfirm: function() {
-                    if (target) {
+                    if (redirect) {
+                        window.location.href = redirect;
+                    } else if (target) {
                         document.getElementById(target).submit();
-                    } else if (href) {
+                    } else if (href && href !== '#') {
                         window.location.href = href;
                     } else {
                         const form = element.closest('form');
@@ -338,49 +339,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🚀 Zeko.app chargé avec succès !');
 });
-
-
-// ============================================
-// SUPPORT POUR data-confirm GÉNÉRIQUE
-// ============================================
-document.querySelectorAll('[data-confirm]').forEach(function(element) {
-    element.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const message = this.getAttribute('data-confirm') || 'Êtes-vous sûr de vouloir effectuer cette action ?';
-        const title = this.getAttribute('data-confirm-title') || 'Confirmer';
-        const icon = this.getAttribute('data-confirm-icon') || 'warning';
-        const confirmText = this.getAttribute('data-confirm-text') || 'Confirmer';
-        const detail = this.getAttribute('data-confirm-detail') || null;
-        const href = this.getAttribute('href');
-        const target = this.getAttribute('data-target') || null;
-        
-        openModal({
-            title: title,
-            message: message,
-            icon: icon,
-            iconClass: icon === 'danger' ? 'fas fa-exclamation-circle' : 
-                       icon === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle',
-            confirmText: confirmText,
-            confirmClass: icon === 'danger' ? 'btn-danger' : 
-                         icon === 'warning' ? 'btn-warning' : 'btn-primary',
-            detail: detail,
-            onConfirm: function() {
-                if (target) {
-                    document.getElementById(target).submit();
-                } else if (href && href !== '#') {
-                    window.location.href = href;
-                } else {
-                    // Si pas de href, trouver le formulaire parent
-                    const form = element.closest('form');
-                    if (form) {
-                        form.submit();
-                    }
-                }
-            }
-        });
-    });
-});
-
-
 

@@ -74,7 +74,6 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
                 </a>
             </li>
             <li class="nav-divider"></li>
-            <!-- ⬇️ LIEN DÉCONNEXION AVEC MODALE - MODIFIÉ ⬇️ -->
             <li>
                 <a href="#" 
                    class="logout-link" 
@@ -84,21 +83,11 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
                    data-confirm-icon="warning"
                    data-confirm-text="Se déconnecter"
                    data-confirm-detail="Vous serez redirigé vers la page d'accueil."
-                   onclick="event.preventDefault(); openModal({
-                       title: 'Déconnexion',
-                       message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                       icon: 'warning',
-                       iconClass: 'fas fa-exclamation-triangle',
-                       confirmText: 'Se déconnecter',
-                       confirmClass: 'btn-warning',
-                       detail: 'Vous serez redirigé vers la page d\'accueil.',
-                       onConfirm: function() { window.location.href = '<?php echo APP_URL; ?>logout.php'; }
-                   });">
+                   data-redirect="<?php echo APP_URL; ?>logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Déconnexion</span>
                 </a>
             </li>
-            <!-- ⬆️ FIN MODIFICATION ⬆️ -->
         </ul>
     </nav>
 </aside>
