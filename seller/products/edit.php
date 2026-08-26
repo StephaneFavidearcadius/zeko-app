@@ -16,13 +16,19 @@ if ($productId <= 0) {
 $pdo = getPDO();
 
 // Récupérer le produit
-$stmt = $pdo->prepare("SELECT * FROM products WHERE id = ? AND user_id = ?");
-$stmt->execute([$productId, $userId]);
+// L'admin peut modifier tous les produits, le vendeur seulement les siens
+if (isAdmin()) {
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+    $stmt->execute([$productId]);
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ? AND user_id = ?");
+    $stmt->execute([$productId, $userId]);
+}
 $product = $stmt->fetch();
 
 if (!$product) {
     setFlashMessage('error', 'Produit non trouvé.');
-    redirect(APP_URL . 'seller/products/index.php');
+    redirect(isAdmin() ? APP_URL . 'admin/products/index.php' : APP_URL . 'seller/products/index.php');
 }
 
 // Récupérer les catégories
@@ -152,16 +158,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Mise à jour en base
-            $sql = "UPDATE products SET 
-                    name = ?, description = ?, price = ?, category_id = ?, 
-                    cover_image = ?, file_path = ?, file_name = ?, file_size = ?, status = ?
-                    WHERE id = ? AND user_id = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                $name, $description, $price, $categoryId,
-                $coverFileName, $filePath, $fileName, $fileSize, $status,
-                $productId, $userId
-            ]);
+            if (isAdmin()) {
+                $sql = "UPDATE products SET 
+                        name = ?, description = ?, price = ?, category_id = ?, 
+                        cover_image = ?, file_path = ?, file_name = ?, file_size = ?, status = ?
+                        WHERE id = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    $name, $description, $price, $categoryId,
+                    $coverFileName, $filePath, $fileName, $fileSize, $status,
+                    $productId
+                ]);
+            } else {
+                $sql = "UPDATE products SET 
+                        name = ?, description = ?, price = ?, category_id = ?, 
+                        cover_image = ?, file_path = ?, file_name = ?, file_size = ?, status = ?
+                        WHERE id = ? AND user_id = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    $name, $description, $price, $categoryId,
+                    $coverFileName, $filePath, $fileName, $fileSize, $status,
+                    $productId, $userId
+                ]);
+            }
             
             $pdo->commit();
             

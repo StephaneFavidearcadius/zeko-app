@@ -160,6 +160,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo formatDate($user['created_at'], 'd/m/Y'); ?></td>
                             <td>
                                 <div class="action-buttons">
+                                    <a href="<?php echo APP_URL; ?>admin/users/view.php?id=<?php echo $user['id']; ?>" 
+                                       class="btn-icon" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="<?php echo APP_URL; ?>admin/users/edit.php?id=<?php echo $user['id']; ?>" 
+                                       class="btn-icon" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                     <?php if ($user['role'] !== 'admin'): ?>
                                         <form method="POST" action="" style="display: inline;">
                                             <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
@@ -171,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </button>
                                         </form>
                                     <?php else: ?>
-                                        <span class="text-muted" style="font-size: 0.8rem;">Protege</span>
+                                        <span class="text-muted" style="font-size: 0.8rem;">Protégé</span>
                                     <?php endif; ?>
                                 </div>
                             </td>
