@@ -3,6 +3,7 @@
 // Liste des produits du vendeur
 
 require_once __DIR__ . '/../../includes/auth.php';
+if (isAdmin()) redirect(APP_URL . 'admin/dashboard.php');
 $pageTitle = 'Mes produits - Zeko.app';
 
 $userId = $_SESSION['user_id'];

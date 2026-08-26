@@ -3,6 +3,12 @@
 // Tableau de bord du vendeur
 
 require_once __DIR__ . '/../includes/auth.php';
+
+// Les admin vont sur leur propre dashboard
+if (isAdmin()) {
+    redirect(APP_URL . 'admin/dashboard.php');
+}
+
 $pageTitle = 'Tableau de bord - Zeko.app';
 
 // Récupérer les statistiques du vendeur

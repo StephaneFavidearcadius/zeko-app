@@ -3,6 +3,7 @@
 // Détail d'une commande
 
 require_once __DIR__ . '/../../includes/auth.php';
+if (isAdmin()) redirect(APP_URL . 'admin/orders/index.php');
 $pageTitle = 'Détail de la commande - Zeko.app';
 
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;

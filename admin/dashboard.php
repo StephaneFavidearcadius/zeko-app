@@ -64,11 +64,6 @@ $stmt = $pdo->query("
 $monthlySales = $stmt->fetchAll();
 $monthlySales = array_reverse($monthlySales);
 
-// IMPORTANT : on calcule le JSON AVANT le heredoc.
-// Un heredoc n'exécute pas le PHP à l'intérieur (les balises <?php ?>
-// ne sont jamais interprétées) : il ne fait qu'interpoler des variables.
-// Comme $monthlySales est un tableau, l'ancien code provoquait
-// "Warning: Array to string conversion".
 $monthlySalesJson = json_encode($monthlySales);
 ?>
 
