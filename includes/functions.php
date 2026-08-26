@@ -10,10 +10,11 @@ function escape($string) {
 }
 
 /**
- * Sécuriser une donnée avant affichage
+ * Nettoyer une donnée avant stockage en base
+ * (pas d'échappement HTML ici : escape() gère la protection XSS à l'affichage)
  */
 function sanitize($string) {
-    return trim(htmlspecialchars($string, ENT_QUOTES, 'UTF-8'));
+    return trim((string)$string);
 }
 
 /**

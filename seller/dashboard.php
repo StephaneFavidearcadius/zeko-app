@@ -110,6 +110,17 @@ try {
 
 <?php ob_start(); ?>
 
+<!-- MESSAGES FLASH -->
+<?php 
+$flash = getFlashMessage();
+if ($flash): 
+?>
+    <div class="flash-message flash-<?php echo $flash['type']; ?>">
+        <span><?php echo escape($flash['message']); ?></span>
+        <button class="flash-close">&times;</button>
+    </div>
+<?php endif; ?>
+
 <div class="dashboard-container">
     <!-- Header -->
     <div class="dashboard-header">
@@ -266,6 +277,7 @@ try {
 </div>
 
 <?php
+$monthlySalesJson = json_encode($monthlySales);
 $additionalJS = <<<JS
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -273,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Graphique des ventes
     const ctx = document.getElementById('salesChart');
     if (ctx) {
-        const monthlyData = <?php echo json_encode($monthlySales); ?>;
+        const monthlyData = {$monthlySalesJson};
         const labels = monthlyData.map(item => item.month);
         const sales = monthlyData.map(item => item.sales_count);
         const totals = monthlyData.map(item => parseFloat(item.total));
@@ -342,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
 JS;
 
 $content = ob_get_clean();
-include __DIR__ . '/../includes/header.php';
+include __DIR__ . '/../includes/header-private.php';
 ?>
 <div class="app-layout">
     <?php include __DIR__ . '/../includes/sidebar.php'; ?>
@@ -351,5 +363,5 @@ include __DIR__ . '/../includes/header.php';
     </main>
 </div>
 <?php
-include __DIR__ . '/../includes/footer.php';
+include __DIR__ . '/../includes/footer-private.php';
 ?>

@@ -15,6 +15,19 @@
 </head>
 <body>
 
+<!-- MESSAGES FLASH -->
+<?php 
+$flash = getFlashMessage();
+if ($flash): 
+?>
+    <div class="flash-message flash-<?php echo $flash['type']; ?>">
+        <div class="container">
+            <span><?php echo escape($flash['message']); ?></span>
+            <button class="flash-close">&times;</button>
+        </div>
+    </div>
+<?php endif; ?>
+
 <!-- MODALE DE CONFIRMATION -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal">

@@ -310,7 +310,7 @@ $content = ob_get_clean();
 // ============================================
 // INCLUSION DU HEADER ET DE LA SIDEBAR
 // ============================================
-include __DIR__ . '/../includes/header.php';
+include __DIR__ . '/../includes/header-private.php';
 ?>
 <div class="app-layout">
     <?php 
@@ -322,5 +322,5 @@ include __DIR__ . '/../includes/header.php';
     </main>
 </div>
 <?php
-include __DIR__ . '/../includes/footer.php';
+include __DIR__ . '/../includes/footer-private.php';
 ?>

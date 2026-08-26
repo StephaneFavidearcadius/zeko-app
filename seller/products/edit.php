@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
 JS;
 
 $content = ob_get_clean();
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/header-private.php';
 ?>
 <div class="app-layout">
     <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
@@ -379,5 +379,5 @@ include __DIR__ . '/../../includes/header.php';
     </main>
 </div>
 <?php
-include __DIR__ . '/../../includes/footer.php';
+include __DIR__ . '/../../includes/footer-private.php';
 ?>

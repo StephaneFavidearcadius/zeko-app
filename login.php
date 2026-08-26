@@ -176,7 +176,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $content = ob_get_clean();
-include __DIR__ . '/includes/header.php';
-echo $content;
-include __DIR__ . '/includes/footer.php';
 ?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo escape($pageTitle); ?></title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="<?php echo APP_URL; ?>assets/css/style.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            color: var(--text-secondary, #666);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        .back-home:hover {
+            color: var(--primary, #4f46e5);
+        }
+    </style>
+</head>
+<body>
+
+<!-- MESSAGES FLASH -->
+<?php 
+$flash = getFlashMessage();
+if ($flash): 
+?>
+    <div class="flash-message flash-<?php echo $flash['type']; ?>">
+        <span><?php echo escape($flash['message']); ?></span>
+        <button class="flash-close">&times;</button>
+    </div>
+<?php endif; ?>
+
+<?php echo $content; ?>
+
+<!-- Retour à l'accueil -->
+<div style="text-align: center; padding-bottom: 40px;">
+    <a href="<?php echo APP_URL; ?>" class="back-home">
+        <i class="fas fa-arrow-left"></i> Retour à l'accueil
+    </a>
+</div>
+
+<!-- JavaScript Global -->
+<script src="<?php echo APP_URL; ?>assets/js/app.js"></script>
+
+</body>
+</html>
